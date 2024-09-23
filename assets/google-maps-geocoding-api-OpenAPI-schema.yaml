@@ -1,0 +1,194 @@
+openapi: 3.0.3
+info:
+  title: Google Maps Geocoding API
+  description: API for converting addresses into geographic coordinates and vice versa.
+  version: 1.0.0
+  contact:
+    name: Google
+    url: https://developers.google.com/maps/documentation/geocoding/start
+
+servers:
+  - url: https://maps.googleapis.com/maps/api
+
+paths:
+  /geocode/json:
+    get:
+      summary: Geocode an address
+      description: Convert an address into geographic coordinates (latitude and longitude).
+      operationId: geocodeAddress
+      parameters:
+        - in: query
+          name: address
+          schema:
+            type: string
+          required: true
+          description: The address to be geocoded.
+        - in: query
+          name: components
+          schema:
+            type: string
+          description: Components used to filter geocoding results.
+        - in: query
+          name: region
+          schema:
+            type: string
+          description: The region code, specified as a ccTLD ("top-level domain") two-character value.
+        - in: query
+          name: language
+          schema:
+            type: string
+          description: The language in which to return results.
+      responses:
+        '200':
+          description: Successful geocode response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        formatted_address:
+                          type: string
+                          description: The formatted address.
+                        geometry:
+                          type: object
+                          properties:
+                            location:
+                              type: object
+                              properties:
+                                lat:
+                                  type: number
+                                  format: double
+                                  description: Latitude of the location.
+                                lng:
+                                  type: number
+                                  format: double
+                                  description: Longitude of the location.
+                            location_type:
+                              type: string
+                              description: The location type.
+                            viewport:
+                              type: object
+                              properties:
+                                northeast:
+                                  type: object
+                                  properties:
+                                    lat:
+                                      type: number
+                                      format: double
+                                    lng:
+                                      type: number
+                                      format: double
+                                southwest:
+                                  type: object
+                                  properties:
+                                    lat:
+                                      type: number
+                                      format: double
+                                    lng:
+                                      type: number
+                                      format: double
+                  status:
+                    type: string
+                    description: The status of the request.
+        '400':
+          description: Bad request - Invalid parameters.
+        '401':
+          description: Unauthorized - Invalid or missing API key.
+        '500':
+          description: Internal server error.
+
+    post:
+      summary: Reverse geocode coordinates
+      description: Convert geographic coordinates (latitude and longitude) into an address.
+      operationId: reverseGeocode
+      parameters:
+        - in: query
+          name: latlng
+          schema:
+            type: string
+            example: "40.714224,-73.961452"
+          required: true
+          description: The latitude/longitude value to be reverse geocoded.
+        - in: query
+          name: location_type
+          schema:
+            type: string
+          description: Specifies the location type to use for reverse geocoding.
+        - in: query
+          name: result_type
+          schema:
+            type: string
+          description: Specifies the types of results to return.
+        - in: query
+          name: language
+          schema:
+            type: string
+          description: The language in which to return results.
+      responses:
+        '200':
+          description: Successful reverse geocode response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        formatted_address:
+                          type: string
+                          description: The formatted address.
+                        geometry:
+                          type: object
+                          properties:
+                            location:
+                              type: object
+                              properties:
+                                lat:
+                                  type: number
+                                  format: double
+                                  description: Latitude of the location.
+                                lng:
+                                  type: number
+                                  format: double
+                                  description: Longitude of the location.
+                            location_type:
+                              type: string
+                              description: The location type.
+                            viewport:
+                              type: object
+                              properties:
+                                northeast:
+                                  type: object
+                                  properties:
+                                    lat:
+                                      type: number
+                                      format: double
+                                    lng:
+                                      type: number
+                                      format: double
+                                southwest:
+                                  type: object
+                                  properties:
+                                    lat:
+                                      type: number
+                                      format: double
+                                    lng:
+                                      type: number
+                                      format: double
+                  status:
+                    type: string
+                    description: The status of the request.
+        '400':
+          description: Bad request - Invalid parameters.
+        '401':
+          description: Unauthorized - Invalid or missing API key.
+        '500':
+          description: Internal server error.
